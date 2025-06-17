@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generator Prompt Gambar Pantai Fantasi</title>
+    <!-- Load Tailwind CSS for modern styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Define Inter font for the body as per instructions */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom styles for specific elements not fully covered by Tailwind, or for fine-tuning */
+        .prompt-text {
+            word-wrap: break-word; /* Memastikan teks panjang terbungkus */
+            white-space: pre-wrap; /* Mempertahankan spasi dan jeda baris */
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center p-5 bg-gray-100 min-h-screen text-gray-800">
+    <h1 class="text-3xl sm:text-4xl font-bold mb-6 text-gray-800 text-center">Generator Prompt Gambar Pantai Fantasi</h1>
+
+    <div id="prompts-container" class="w-full max-w-4xl px-4">
+        <!-- Kartu prompt akan dimasukkan secara dinamis di sini oleh JavaScript -->
+    </div>
+
+    <button id="refresh-button" class="mt-8 px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+        Refresh Prompt
+    </button>
+
+    <script>
+        // Array bagian deskriptif untuk menghasilkan prompt yang lebih panjang dan bervariasi
+        const mainScenes = [
+            "Sebuah pemandangan malam yang magis dan mempesona di tepi pantai",
+            "Pesisir yang tenang di bawah langit malam yang dramatis",
+            "Teluk tersembunyi dengan suasana mistis di malam hari",
+            "Hamparan pulau tropis yang bersinar di bawah cahaya rembulan",
+            "Garis pantai yang eksotis dengan elemen fantasi",
+            "Laguna yang damai dengan sentuhan keajaiban malam"
+        ];
+
+        const structures = [
+            "sebuah pondok kayu yang nyaman dengan cahaya hangat yang terpancar dari jendelanya dan lentera yang menggantung",
+            "reruntuhan kuno yang diselimuti tanaman merambat bercahaya dengan obor eterik",
+            "menara mercusuar kristal yang memancarkan sinar aurora",
+            "perahu layar kuno yang berlabuh di pantai, dengan layar sutra bercahaya"
+        ];
+
+        const mainFlora = [
+            "sebuah pohon megah dengan dedaunan berwarna merah muda dan ungu yang bercahaya",
+            "hutan palem tinggi dengan daun-daun berpendar neon hijau dan biru",
+            "semak-semak fantasi yang lebat dengan bunga-bunga raksasa bercahaya",
+            "pohon beringin tua yang akarnya memancarkan cahaya lembut"
+        ];
+
+        const moonVariations = [
+            "bulan purnama biru yang sangat besar dan bersinar terang",
+            "bulan sabit perak yang memancarkan cahaya keemasan ke laut",
+            "dua bulan kembar, satu merah muda dan satu cyan, menggantung di langit",
+            "bulan raksasa dengan cincin nebula berwarna-warni"
+        ];
+
+        const skyFeatures = [
+            "lengkap dengan sebuah bintang jatuh yang melesat di dekatnya",
+            "dengan gugusan bintang-bintang berpendar yang membentuk konstelasi tak dikenal",
+            "dan aurora borealis lembut menari di cakrawala",
+            "serta kilauan komet yang melintas pelan"
+        ];
+
+        const groundFeatures = [
+            "Sebuah jalan setapak magis yang berpendar dengan warna ungu neon mengalir dari pondok/struktur, melintasi rerumputan dan bebatuan menuju ke hamparan bunga-bunga berwarna-warni yang juga memancarkan cahaya lembut di latar depan",
+            "pasir pantai putih yang berkilauan dengan jejak cahaya keemasan dan cangkang laut bercahaya",
+            "bebatuan kristal raksasa yang menonjol dari tanah, memancarkan spektrum warna",
+            "lapangan lumut berpendar yang menciptakan pola rumit di tanah"
+        ];
+
+        const waterEffects = [
+            "Lautan yang tenang dengan ombak lembut memantulkan cahaya bulan",
+            "Air laut yang bergelombang dengan tepian ombak bersinar neon cerah",
+            "Permukaan air yang tenang memantulkan detail langit dan bulan dengan sempurna, ditambah partikel cahaya mengambang",
+            "ombak besar dengan puncak yang meledak menjadi percikan cahaya elektrik"
+        ];
+
+        const cloudAtmosphere = [
+            "sementara awan-awan dramatis menyelimuti cakrawala",
+            "dengan awan tipis yang berpendar lembut, seolah terbuat dari sutra",
+            "dan formasi awan berputar yang memancarkan kilauan eterik",
+            "langit bersih dengan beberapa awan gumpal yang memantulkan cahaya bulan"
+        ];
+
+        const overallMoods = [
+            "menciptakan suasana yang sangat detail, penuh fantasi, dan sinematik dengan palet warna biru, ungu, dan merah muda",
+            "memberikan nuansa damai, mistis, dan menakjubkan dengan sentuhan hijau zamrud dan emas",
+            "dengan aura misterius dan memukau, diperkaya oleh warna biru neon dan merah terang",
+            "mewujudkan dunia impian yang cerah dan hidup, dengan dominasi warna pastel berpendar"
+        ];
+
+        // Frasa penutup yang konsisten termasuk rasio aspek dan gaya
+        const concludingPhrase = ".aspek rasio 16:9, gaya ilustrasi fantasi digital.";
+
+        /**
+         * Menghasilkan satu prompt dinamis dengan menggabungkan elemen acak untuk prompt yang lebih panjang.
+         * @returns {string} Prompt gambar baru yang sangat detail dan unik.
+         */
+        function generateDynamicPrompt() {
+            let prompt = "";
+            prompt += mainScenes[Math.floor(Math.random() * mainScenes.length)];
+            prompt += ", menampilkan " + structures[Math.floor(Math.random() * structures.length)];
+            prompt += ". Di sampingnya, berdiri " + mainFlora[Math.floor(Math.random() * mainFlora.length)];
+            prompt += ", di bawah langit malam yang dihiasi oleh " + moonVariations[Math.floor(Math.random() * moonVariations.length)];
+            prompt += " " + skyFeatures[Math.floor(Math.random() * skyFeatures.length)];
+            prompt += ". " + groundFeatures[Math.floor(Math.random() * groundFeatures.length)]; // Dimulai dengan huruf kapital
+            prompt += ". " + waterEffects[Math.floor(Math.random() * waterEffects.length)];
+            prompt += ", " + cloudAtmosphere[Math.floor(Math.random() * cloudAtmosphere.length)];
+            prompt += ", " + overallMoods[Math.floor(Math.random() * overallMoods.length)];
+            prompt += concludingPhrase;
+            return prompt;
+        }
+
+        /**
+         * Menampilkan 5 prompt unik di halaman.
+         * Memastikan tidak ada prompt duplikat yang ditampilkan dalam satu batch generasi.
+         */
+        function displayPrompts() {
+            const promptsContainer = document.getElementById('prompts-container');
+            promptsContainer.innerHTML = ''; // Hapus prompt yang ada
+
+            const generatedPrompts = new Set(); // Gunakan Set untuk menyimpan prompt unik
+            while (generatedPrompts.size < 5) {
+                generatedPrompts.add(generateDynamicPrompt());
+            }
+
+            // Iterasi melalui prompt unik dan buat elemen HTML untuk masing-masing
+            generatedPrompts.forEach(promptText => {
+                const promptDiv = document.createElement('div');
+                // Terapkan kelas Tailwind untuk menata wadah prompt
+                promptDiv.classList.add(
+                    'bg-white', 'border', 'border-gray-200', 'p-4', 'mb-4', 'rounded-lg',
+                    'shadow-md', 'flex', 'flex-col', 'sm:p-6', 'mx-auto', 'w-full' // Responsif padding, pemusatan, dan lebar penuh
+                );
+
+                const textParagraph = document.createElement('p');
+                // Terapkan kelas Tailwind untuk menata teks prompt
+                textParagraph.classList.add('prompt-text', 'mb-3', 'text-base', 'leading-relaxed', 'text-gray-700', 'sm:text-lg');
+                textParagraph.textContent = promptText;
+
+                const buttonDiv = document.createElement('div');
+                // Terapkan kelas Tailwind untuk tata letak wadah tombol
+                buttonDiv.classList.add('flex', 'gap-2', 'justify-end'); // Sejajarkan tombol salin ke kanan
+
+                const copyButton = document.createElement('button');
+                // Terapkan kelas Tailwind untuk penataan tombol
+                copyButton.classList.add(
+                    'px-4', 'py-2', 'bg-green-500', 'text-white', 'font-semibold', 'rounded-md',
+                    'shadow-sm', 'hover:bg-green-600', 'transition', 'duration-200', 'text-sm',
+                    'focus:outline-none', 'focus:ring-2', 'focus:ring-green-400', 'focus:ring-opacity-50'
+                );
+                copyButton.textContent = 'Salin'; // Teks tombol dalam bahasa Indonesia
+
+                // Tambahkan event listener untuk menyalin teks ke clipboard
+                copyButton.addEventListener('click', () => {
+                    try {
+                        // Membuat elemen textarea sementara untuk menyalin teks
+                        const tempTextArea = document.createElement('textarea');
+                        tempTextArea.value = promptText;
+                        document.body.appendChild(tempTextArea);
+                        tempTextArea.select();
+                        document.execCommand('copy'); // Menggunakan execCommand untuk menyalin
+                        document.body.removeChild(tempTextArea);
+
+                        // Memberikan umpan balik visual untuk keberhasilan penyalinan
+                        const originalText = copyButton.textContent;
+                        copyButton.textContent = 'Disalin!';
+                        setTimeout(() => {
+                            copyButton.textContent = originalText;
+                        }, 1500); // Mengembalikan teks tombol setelah 1.5 detik
+                    } catch (err) {
+                        // Mencatat kesalahan ke konsol jika penyalinan gagal
+                        console.error('Gagal menyalin prompt: ', err);
+                        // Memberikan umpan balik visual yang berbeda untuk kegagalan
+                        copyButton.textContent = 'Gagal!';
+                        copyButton.classList.remove('bg-green-500', 'hover:bg-green-600');
+                        copyButton.classList.add('bg-red-500', 'hover:bg-red-600');
+                        setTimeout(() => {
+                            copyButton.textContent = 'Salin';
+                            copyButton.classList.remove('bg-red-500', 'hover:bg-red-600');
+                            copyButton.classList.add('bg-green-500', 'hover:bg-green-600');
+                        }, 2000);
+                    }
+                });
+
+                // Tambahkan elemen ke wadah masing-masing
+                buttonDiv.appendChild(copyButton);
+                promptDiv.appendChild(textParagraph);
+                promptDiv.appendChild(buttonDiv);
+                promptsContainer.appendChild(promptDiv);
+            });
+        }
+
+        // Dapatkan elemen tombol refresh
+        const refreshButton = document.getElementById('refresh-button');
+        // Tambahkan event listener ke tombol refresh
+        refreshButton.addEventListener('click', displayPrompts);
+
+        // Tampilkan prompt saat halaman pertama kali dimuat
+        displayPrompts();
+    </script>
+</body>
+</html>
